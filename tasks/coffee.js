@@ -9,12 +9,13 @@
 module.exports = function(grunt) {
   'use strict';
 
+  var fs = require('fs');
+  var path = require('path');
+
   // TODO: ditch this when grunt v0.4 is released
   grunt.util = grunt.util || grunt.utils;
 
   grunt.registerMultiTask('coffee', 'Compile CoffeeScript files into JavaScript', function() {
-    var path = require('path');
-
     var helpers = require('grunt-lib-contrib').init(grunt);
 
     var options = helpers.options(this, {
@@ -27,6 +28,7 @@ module.exports = function(grunt) {
 
     // TODO: ditch this when grunt v0.4 is released
     this.files = this.files || helpers.normalizeMultiTaskFiles(this.data, this.target);
+    this.files = helpers.expandIndividualDests(this.files, options.basePath, options.flatten);
 
     var basePath;
     var newFileDest;
@@ -36,29 +38,21 @@ module.exports = function(grunt) {
     var taskOutput;
 
     this.files.forEach(function(file) {
-      file.dest = path.normalize(file.dest);
-      srcFiles = grunt.file.expandFiles(file.src);
-
-      if (srcFiles.length === 0) {
-        grunt.log.writeln('Unable to compile; no valid source files were found.');
+      if (file.src.length === 0) {
+        var noSourcesWarning = 'Unable to compile ' + file.dest + '; no valid source files were found.';
+        grunt.log.writeln(noSourcesWarning.yellow);
         return;
       }
 
-      taskOutput = [];
+      if (helpers.isDestUpToDate(file)) {
+        grunt.log.writeln('Up to date ' + file.dest.green + '.');
+        return;
+      }
 
-      srcFiles.forEach(function(srcFile) {
-        srcCompiled = compileCoffee(srcFile, options);
-
-        if (helpers.isIndividualDest(file.dest)) {
-          basePath = helpers.findBasePath(srcFiles, options.basePath);
-          newFileDest = helpers.buildIndividualDest(file.dest, srcFile, basePath, options.flatten);
-
-          grunt.file.write(newFileDest, srcCompiled || '');
-          grunt.log.writeln('File ' + newFileDest.cyan + ' created.');
-        } else {
-          taskOutput.push(srcCompiled);
-        }
-      });
+      taskOutput = file.src.reduce(function(result, srcFile) {
+        result.push(compileCoffee(srcFile, options));
+        return result;
+      }, []);
 
       if (taskOutput.length > 0) {
         grunt.file.write(file.dest, taskOutput.join('\n') || '');
