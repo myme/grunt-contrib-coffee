@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "coffee-script": "~1.3.3",
-    "grunt-lib-contrib": "git+ssh://git@git/users/mmyrseth/grunt-lib-contrib.git"
+    "grunt-lib-contrib": "https://github.com/myme/grunt-lib-contrib.git#vega"
   },
   "devDependencies": {
     "grunt": "~0.3.15",
