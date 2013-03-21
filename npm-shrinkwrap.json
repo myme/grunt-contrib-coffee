@@ -7,7 +7,7 @@
     },
     "grunt-lib-contrib": {
       "version": "0.4.0",
-      "from": "https://github.com/myme/grunt-lib-contrib.git#vega"
+      "from": "git://github.com/myme/grunt-lib-contrib.git#vega"
     },
     "grunt": {
       "version": "0.3.17",
