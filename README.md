@@ -2,60 +2,89 @@
 
 > Compile CoffeeScript files to JavaScript.
 
-### Overview
 
-Inside your `grunt.js` file add a section named `coffee`. This section specifies the files to compile and the options passed to [CoffeeScript](http://coffeescript.org/#usage).
 
-#### Parameters
+## Getting Started
+This plugin requires Grunt `~0.4.0`
 
-##### files ```object```
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
-This defines what files this task will process and should contain key:value pairs.
+```shell
+npm install grunt-contrib-coffee --save-dev
+```
 
-The key (destination) should be an unique filepath (supports [grunt.template](https://github.com/gruntjs/grunt/blob/master/docs/api_template.md)) and the value (source) should be a filepath or an array of filepaths (supports [minimatch](https://github.com/isaacs/minimatch)).
+Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
-**Experimental** As of v0.3.0, you can use *.{ext} as your destination filename to individually compile each file to the destination directory. Otherwise, when the source contains an array of multiple filepaths, the contents are concatenated in the order passed.
+```js
+grunt.loadNpmTasks('grunt-contrib-coffee');
+```
 
-##### options ```object```
+*This plugin was designed to work with Grunt 0.4.x. If you're still using grunt v0.3.x it's strongly recommended that [you upgrade](http://gruntjs.com/upgrading-from-0.3-to-0.4), but in case you can't please use [v0.3.2](https://github.com/gruntjs/grunt-contrib-coffee/tree/grunt-0.3-stable).*
 
-This controls how this task (and its helpers) operate and should contain key:value pairs, see options below.
 
-#### Options
+## Coffee task
+_Run this task with the `grunt coffee` command._
 
-##### bare ```boolean```
+Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
+### Options
+
+#### separator
+Type: `String`
+Default: linefeed
+
+Concatenated files will be joined on this string.
+
+#### bare
+Type: `boolean`
 
 Compile the JavaScript without the top-level function safety wrapper.
 
-##### basePath ```string``` (individual only)
+#### join
+Type: `boolean`
+Default: `false`
 
-This option adjusts the folder structure when compiled to the destination directory. When not explicitly set, best effort is made to locate the basePath by comparing all source filepaths left to right for a common pattern.
+When compiling multiple .coffee files into a single .js file, concatenate first.
+### Usage Examples
 
-##### flatten ```boolean``` (individual only)
-
-This option performs a flat compile that dumps all the files into the root of the destination directory, overwriting files if they exist.
-
-#### Config Example
-
-``` javascript
+```js
 coffee: {
   compile: {
     files: {
       'path/to/result.js': 'path/to/source.coffee', // 1:1 compile
-      'path/to/another.js': ['path/to/sources/*.coffee', 'path/to/more/*.coffee'], // compile and concat into single file
-      'path/to/*.js': ['path/to/sources/*.coffee', 'path/to/more/*.coffee'] // compile individually into dest, maintaining folder structure
-      }
-    },
-    flatten: {
-      options: {
-        flatten: true
-      },
-      files: {
-        'path/to/*.js': ['path/to/sources/*.coffee', 'path/to/more/*.coffee'] // compile individually into dest, flattening folder structure
-      }
+      'path/to/another.js': ['path/to/sources/*.coffee', 'path/to/more/*.coffee'] // compile and concat into single file
     }
+  },
+
+  glob_to_multiple: {
+    expand: true,
+    cwd: 'path/to',
+    src: ['*.coffee'],
+    dest: 'path/to/dest/',
+    ext: '.js'
+  }
 }
 ```
 
---
+For more examples on how to use the `expand` API shown in the `glob_to_multiple` example, see "Building the files object dynamically" in the grunt wiki entry [Configuring Tasks](http://gruntjs.com/configuring-tasks).
 
-*Task submitted by [Eric Woroshow](https://github.com/errcw).*
+## Release History
+
+ * 2013-03-18   v0.6.3   Increase error logging verbosity.
+ * 2013-03-17   v0.6.2   Bump to CoffeeScript 1.6.2
+ * 2013-03-17   v0.6.1   Support `join` option
+ * 2013-03-05   v0.6.0   Bump to CoffeeScript 1.6 Support literate CoffeeScript extension coffee.md
+ * 2013-02-24   v0.5.0   Bump to CoffeeScript 1.5 Support literate CoffeeScript (.litcoffee)
+ * 2013-02-14   v0.4.0   First official release for Grunt 0.4.0.
+ * 2013-01-22   v0.4.0rc7   Updating grunt/gruntplugin dependencies to rc7. Changing in-development grunt/gruntplugin dependency versions from tilde version ranges to specific versions. Bump coffeescript dependency to 1.4.
+ * 2013-01-08   v0.4.0rc5   Updating to work with grunt v0.4.0rc5. Switching to this.filesSrc api.
+ * 2012-12-14   v0.4.0a   Conversion to grunt v0.4 conventions. Remove experimental destination wildcards.
+ * 2012-10-11   v0.3.2   Rename grunt-contrib-lib dep to grunt-lib-contrib.
+ * 2012-09-24   v0.3.1   Don't fail when there are no files.
+ * 2012-09-23   v0.3.0   Global options depreciated.
+ * 2012-09-09   v0.2.0   Refactored from grunt-contrib into individual repo.
+
+---
+
+Task submitted by [Eric Woroshow](http://ericw.ca/)
+
+*This file was generated on Tue Mar 19 2013 20:06:32.*
