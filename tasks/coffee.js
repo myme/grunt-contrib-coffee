@@ -33,7 +33,6 @@ module.exports = function(grunt) {
       var output;
 
       if (helpers.isDestUpToDate(f)) {
-        grunt.log.writeln('File ' + f.dest.green + ' is up to date.');
         return;
       }
 
